@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_post_api_luminar/screens/home.dart';
 import 'package:flutter_post_api_luminar/screens/login.dart';
+import 'package:flutter_post_api_luminar/screens/registration.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,6 +19,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login' : (context) => LoginScreen(),
+        '/register' : (context) => RegistrationPage(),
+        '/home' : (context) => HomeScreen(),
       },
     );
   }

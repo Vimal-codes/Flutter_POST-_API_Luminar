@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_post_api_luminar/service/apiService.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -17,6 +18,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController pincodeController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  ApiService apiService = ApiService();
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +46,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 border: OutlineInputBorder(),
                 labelText: "Phone",
               ),
-              validator: (value){
-                return value!.length < 1? "must fill": null;
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "This field is required.";
+                } else if (value.length < 10) {  // For phone numbers
+                  return "Enter a valid phone number.";
+                }
+                return null;
               },
+
             ),
             SizedBox(height: 10,),
             TextFormField(
@@ -94,13 +104,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ElevatedButton(
                 onPressed: () async {
                   if(formkey.currentState!.validate()){
-                    nameController.text;
-                    int.parse(phoneController.text);
-                    placeController.text;
-                    int.parse(pincodeController.text);
-                    emailController.text;
-                    passwordController.text;
+                    apiService.registration(
+                        nameController.text,
+                        int.parse(phoneController.text),
+                        placeController.text,
+                        int.parse(pincodeController.text),
+                        emailController.text,
+                        passwordController.text
+                    );
                   }
+                  Navigator.pushReplacementNamed(context, '/login');
                 },
                 child: Text("Register"))
           ],
