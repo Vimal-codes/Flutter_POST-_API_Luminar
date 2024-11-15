@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_post_api_luminar/model/login/GetLoginData.dart';
 import 'package:http/http.dart' as http;
 
-class ApiSrevice{
+class ApiService{
 
   final String baseUrl = "https://freeapi.luminartechnohub.com";
 
-  Future<void> login(String email,  String password) async {
+  Future<GetLoginData?> login(String email,  String password) async {
     var url = Uri.parse("$baseUrl/login");
 
     var header = {
@@ -21,10 +22,11 @@ class ApiSrevice{
     );
 
     try{
-      final respone = await http.post(url, headers: header, body: body);
-      if(respone.statusCode >= 200 && respone.statusCode <= 299){
-        var responeData = jsonDecode(respone.body);
-        print("${respone.body}");
+      final response = await http.post(url, headers: header, body: body);
+      if(response.statusCode >= 200 && response.statusCode <= 299){
+        var responseData = jsonDecode(response.body);
+        return GetLoginData.fromJson(responseData);
+        print("${response.body}");
       }
     }catch (e){
       print("$e");
@@ -51,10 +53,10 @@ class ApiSrevice{
     );
 
     try{
-      final respone = await http.post(url, headers: headers, body: body);
-      if(respone.statusCode >= 200 && respone.statusCode <= 299){
-        var responeData = jsonDecode(respone.body);
-        print("${respone.body}");
+      final response = await http.post(url, headers: headers, body: body);
+      if(response.statusCode >= 200 && response.statusCode <= 299){
+        var responseData = jsonDecode(response.body);
+        print("Registration successful: $responseData");
       }
     }catch (e){
       print("$e");

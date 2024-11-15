@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_post_api_luminar/model/login/GetLoginData.dart';
 import 'package:flutter_post_api_luminar/service/apiService.dart';
+
+import '../service/userservice.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,7 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  ApiSrevice apiSrevice = ApiSrevice();
+  ApiService apiService = ApiService();
+  SharedPreferenceHelper helper=SharedPreferenceHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +55,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                     onPressed: () async {
                   if(formkey.currentState!.validate()){
-                     await apiSrevice.login(emailController.text, passwordController.text);
+                   GetLoginData? res=  await apiService.login(emailController.text, passwordController.text);
+                   if(res!=null){
+                    await  helper.saveLoginData(res).then((value){
+                      Navigator.pushReplacementNamed(context, '/home');
+                    }) ;
+
+                   }
                   }
                 }, child: Text("Login")),
-                ElevatedButton(onPressed: () {}, child: Text("SignUp"))
+                ElevatedButton(onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/register');
+                }, child: Text("SignUp"))
               ],
             )
           ],
@@ -63,3 +75,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
