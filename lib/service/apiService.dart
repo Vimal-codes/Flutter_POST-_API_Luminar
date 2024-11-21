@@ -1,8 +1,13 @@
 import 'dart:convert';
 import 'package:flutter_post_api_luminar/model/login/GetLoginData.dart';
+import 'package:flutter_post_api_luminar/model/product/Data.dart';
+import 'package:flutter_post_api_luminar/model/product/GetAllProduct.dart';
+import 'package:flutter_post_api_luminar/service/userservice.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService{
+
+  SharedPreferenceHelper getLoginData = SharedPreferenceHelper();
 
   final String baseUrl = "https://freeapi.luminartechnohub.com";
 
@@ -62,4 +67,29 @@ class ApiService{
       print("$e");
     }
   }
+
+  Future<List<Data>?> products() async {
+    var url = Uri.parse("$baseUrl/products-all/");
+
+    GetLoginData? d = await getLoginData.getLoginData();
+
+    var headers = {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization' : 'Bearer ${d!.access}'
+    };
+
+    try{
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode >= 200 && response.statusCode <=299){
+        var responseData = jsonDecode(response.body);
+        var allProducts = GetAllProduct.fromJson(responseData);
+        var list = allProducts.data;
+        return list;
+      }
+    }catch(e){
+      print("$e");
+    }
+  }
+  
 }
